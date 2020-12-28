@@ -22,7 +22,6 @@
  */
 
 #include "MicroBit.h"
-#include "StreamNormalizer.h"
 #include "LevelDetectorSPL.h"
 #include "neopixel.h"
 
@@ -41,7 +40,7 @@ MicroBit uBit;
 #define NOISE_FLOOR 30.f
 
 static MIC_DEVICE microphone = NULL;
-static StreamNormalizer* processor = NULL;
+// static StreamNormalizer* processor = NULL;
 static LevelDetectorSPL* splMeter = NULL;
 
 static const int sampleRate = 50000;         // Hz
@@ -124,9 +123,7 @@ int main()
     microphone = uBit.adc.getChannel(uBit.io.microphone);
     microphone->setGain(7, 0);
 
-    processor = new StreamNormalizer(microphone->output, 1.0f, true, DATASTREAM_FORMAT_UNKNOWN, 0);
-
-    splMeter = new LevelDetectorSPL(processor->output, 105., 45., 1.0, 40., DEVICE_ID_MICROPHONE);
+    splMeter = new LevelDetectorSPL(microphone->output, 105., 45., 1.0, 40., DEVICE_ID_MICROPHONE);
     splMeter->setWindowSize(LEVEL_DETECTOR_SPL_DEFAULT_WINDOW_SIZE / 2);
 
     uBit.io.runmic.setDigitalValue(1);
